@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>姻缘预测器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #ff69b4;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #ff1493;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 18px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>姻缘预测器</h1>
+        <input type="text" id="name1" placeholder="你的名字">
+        <br>
+        <input type="text" id="name2" placeholder="他/她的名字">
+        <br>
+        <button onclick="predict()">预测姻缘</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function predict() {
+            const name1 = document.getElementById('name1').value;
+            const name2 = document.getElementById('name2').value;
+            
+            if (!name1 || !name2) {
+                alert('请输入两个名字');
+                return;
+            }
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({name1: name1, name2: name2}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <h3>${name1} 和 ${name2} 的姻缘预测结果：</h3>
+                    <p>缘分指数：${data.score}/100</p>
+                    <p>${data.description}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
